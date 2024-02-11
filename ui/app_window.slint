@@ -1,0 +1,103 @@
+import { AboutSlint, Button, VerticalBox, GridBox, LineEdit, HorizontalBox, Palette, ScrollView, StandardButton } from "std-widgets.slint";
+
+export component AppWindow inherits Window {
+    title: app_name;
+    icon: @image-url("../asset/icon-64.png");
+    preferred-width: 500px;
+    preferred-height: 500px;
+
+    in property <string> app_name;
+    in property <string> app_description;
+    in property <string> app_version;
+    in property <string> app_url;
+    in property <string> app_license;
+    in-out property <string> file_path;
+    in-out property <string> tree_text;
+
+    callback open_button_clicked <=> open_button.clicked;
+    callback reload_button_clicked <=> reload_button.clicked;
+    callback reload_file;
+
+    about_popup := PopupWindow { 
+        x: 1rem;
+        y: 1rem;
+
+        Rectangle {
+            background: Palette.background;
+            border-color: Palette.border;
+    
+            VerticalBox {
+                HorizontalLayout {
+                    Text {
+                        text: app_name;
+                        font-size: 2rem;
+                        font-weight: 900;
+                    }
+                    Text { 
+                        text: " v\{app_version}";
+                        vertical-alignment: bottom;
+                        horizontal-stretch: 1;
+                    }
+                }
+                HorizontalBox  { 
+                    Image {
+                        source: @image-url("../asset/icon-64.png");
+                        width: 64px;
+                        height: 64px;
+                        padding-right: 16px;
+                    }
+                    VerticalLayout {
+                        Text { text: app_description; }
+                        VerticalLayout {
+                            Text { text: app_url; }
+                            Text { text: "License: \{app_license}"; }
+                        }
+                    }
+                }
+    
+                AboutSlint { preferred-height: 100px; }
+            }
+        }
+    }
+
+    VerticalBox {
+        HorizontalBox {
+            open_button := Button {
+                text: "📂 Open...";
+                horizontal-stretch: 1;
+            }
+            reload_button := Button {
+                text: "🔄️ Reload";
+                horizontal-stretch: 1;
+            }
+            about_button := Button {
+                text: "❔";
+                clicked => { about_popup.show(); }
+            }
+        }
+
+        HorizontalBox {
+            Text {
+                text: "File: ";
+                horizontal-stretch: 0;
+            }
+            Text {
+                text: file_path;
+                horizontal-alignment: left;
+                horizontal-stretch: 1;
+            }
+        }
+
+        ScrollView {
+            preferred-width: scroll_inner.preferred-width;
+            preferred-height: scroll_inner.preferred-height;
+
+            scroll_inner := VerticalBox {
+                Text {
+                    text: tree_text;
+                    vertical-alignment: top;
+                }
+            }
+        }
+    }
+}

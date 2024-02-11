@@ -1,0 +1,11 @@
+{
+	"dependencies": [
+		"alembic",
+		{
+			"name": "cxxopts",
+			"version>=": "3.0.0"
+		},
+		"imath",
+		"spdlog"
+	]
+}
