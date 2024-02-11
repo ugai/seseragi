@@ -23,7 +23,7 @@ using namespace seseragi;
 
 constexpr char AppName[] = "Seseragi";
 constexpr char AppDescription[] =
-    "A simple tool for checking the hierarchy information of Alembic files.";
+    "A simple GUI tool for checking the hierarchy information of Alembic files.";
 constexpr char AppVersion[] = "0.1.0";
 constexpr char AppUrl[] = "https://github.com/ugai/seseragi";
 constexpr char AppLicense[] = "MIT License";

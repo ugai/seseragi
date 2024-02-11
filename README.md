@@ -1,6 +1,8 @@
 # Seseragi
 
-A simple tool for checking the hierarchy information of Alembic files.
+![icon](asset/icon-64.png)
+
+A simple GUI tool for checking the hierarchy information of Alembic files.
 
 ## Motivation
 
@@ -21,14 +23,18 @@ cmake -B build
 cmake --build build
 ```
 
-## License
+## Similar apps
 
-MIT Licene
-
-- Icon from [いらすとや](https://www.irasutoya.com/)
-
-## Related Apps
-
+- [AbcTree](https://github.com/alembic/alembic/tree/master/bin/AbcTree)
 - [abcview](https://github.com/alembic/abcview)
 - [Web Alembic Viewer](https://github.com/i-saint/WebAlembicViewer)
 - [Alembic USD Plugin](https://openusd.org/release/plugins_alembic.html#alembic-usd-plugin)
+
+## License
+
+This project under the [MIT License](LICENSE).
+
+- The app icon uses materials from [いらすとや](https://www.irasutoya.com/).
+- This app uses [Slin UI framework](https://slint.dev/) with a [royality free license](https://github.com/slint-ui/slint/blob/d299f0bf3eff7e6b272c3e2331b75596922e102f/LICENSES/LicenseRef-Slint-Royalty-free-1.1.md).
+
+![madewithslint](asset/MadeWithSlint-logo-whitebg.jpg)
