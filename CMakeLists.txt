@@ -37,7 +37,12 @@ endif (NOT Slint_FOUND)
 file(GLOB_RECURSE SOURCES src/*.cpp)
 add_executable(seseragi ${SOURCES})
 target_include_directories(seseragi PRIVATE include)
-# target_sources(seseragi PRIVATE src/seseragi.manifest)
+if(MSVC)
+  # Force encoding to UTF-8
+  add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+  # Force UTF-8 codepage
+  target_sources(seseragi PRIVATE src/win32_utf8.manifest)
+endif()
 
 # Vcpkg ports
 target_link_libraries(seseragi PRIVATE Alembic::Alembic)
@@ -53,6 +58,8 @@ slint_target_sources(seseragi ui/app_window.slint)
 target_link_libraries(seseragi PRIVATE Slint::Slint)
 # On Windows, copy the Slint DLL next to the application binary so that it's found.
 if (WIN32)
+  # Set additional win32 libraries to avoid build errors
+  target_link_libraries(seseragi PRIVATE imm32.lib dwmapi.lib uxtheme.lib uiautomationcore.lib opengl32.lib glu32.lib)
   add_custom_command(TARGET seseragi POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:seseragi> $<TARGET_FILE_DIR:seseragi> COMMAND_EXPAND_LISTS)
 endif()
 

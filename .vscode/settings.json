@@ -86,5 +86,6 @@
         "source_location": "cpp",
         "variant": "cpp"
     },
-    "dotnet.defaultSolution": "build/seseragi.sln"
+    "dotnet.defaultSolution": "build/seseragi.sln",
+    "C_Cpp.errorSquiggles": "enabled"
 }
