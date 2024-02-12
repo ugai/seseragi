@@ -12,6 +12,7 @@ Once I wanted to check the object hierarchy of some Alembic files, but existing 
 
 - CMake
 - Vcpkg
+  - Add the directory containing `vcpkg.exe` to your `PATH` and `VCPKG_ROOT` environment variables.
 - Rust
 - Qt (for Windows)
 
