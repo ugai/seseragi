@@ -10,11 +10,11 @@ Once I wanted to check the object hierarchy of some Alembic files, but existing 
 
 ## Build from source
 
+- Git
 - CMake
 - Vcpkg
   - Add the directory containing `vcpkg.exe` to your `PATH` and `VCPKG_ROOT` environment variables.
 - Rust
-- Qt (for Windows)
 
 ```bash
 git clone --recursive https://github.com/ugai/seseragi
@@ -38,4 +38,4 @@ This project under the [MIT License](LICENSE).
 - This app uses [Slint UI framework](https://slint.dev/) with a [royality free license](https://github.com/slint-ui/slint/blob/d299f0bf3eff7e6b272c3e2331b75596922e102f/LICENSES/LicenseRef-Slint-Royalty-free-1.1.md).
 - The app icon uses materials from [いらすとや](https://www.irasutoya.com/).
 
-![madewithslint](asset/MadeWithSlint-logo-whitebg.jpg)
+[![madewithslint](asset/MadeWithSlint-logo-dark.svg)](https://madewithslint.com/)
