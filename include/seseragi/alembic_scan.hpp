@@ -7,6 +7,8 @@
 #include <string>
 
 #include <Alembic/Abc/All.h>
+#include <Alembic/Abc/ErrorHandler.h>
+#include <Alembic/Util/Exception.h>
 
 #include "alembic_node.hpp"
 
@@ -24,14 +26,18 @@ public:
           std::format("file not found: '{}'", abc_file_path)};
     }
 
-    Alembic::AbcCoreOgawa::ReadArchive reader;
-    Alembic::Abc::IArchive archive(reader, abc_file_path);
+    try {
+      Alembic::AbcCoreOgawa::ReadArchive reader;
+      Alembic::Abc::IArchive archive(reader, abc_file_path,
+                                     Alembic::Abc::ErrorHandler::kThrowPolicy);
 
-    const auto obj = archive.getTop();
-    auto root_node = std::make_shared<AbcNode>();
-    scan_alembic_tree_recursively(root_node, obj);
-
-    return root_node;
+      const auto obj = archive.getTop();
+      auto root_node = std::make_shared<AbcNode>();
+      scan_alembic_tree_recursively(root_node, obj);
+      return root_node;
+    } catch (Alembic::Util::Exception e) {
+      return std::unexpected{e};
+    }
   };
 
 private:

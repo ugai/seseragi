@@ -84,7 +84,10 @@
         "valarray": "cpp",
         "bitset": "cpp",
         "source_location": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "random": "cpp",
+        "string_view": "cpp",
+        "*.in": "cpp"
     },
     "dotnet.defaultSolution": "build/seseragi.sln",
     "C_Cpp.errorSquiggles": "enabled"

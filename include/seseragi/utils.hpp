@@ -5,21 +5,6 @@
 
 namespace seseragi::utils {
 
-/// @brief Convert string encoding to UTF-8.
-/// @param s
-/// @return
-static inline std::string convert_utf8(std::string &s) {
-  return s;
-};
-
-/// @brief Convert string encoding to system MBCS (Multi-Byte Character Set) for
-/// Windows.
-/// @param s
-/// @return
-static inline std::string convert_mbcs_win(std::string &s) {
-  return s;
-};
-
 /// @brief Add space characers to stringstream.
 /// @param ss
 /// @param count

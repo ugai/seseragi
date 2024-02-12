@@ -10,7 +10,6 @@ export component AppWindow inherits Window {
     in property <string> app_description;
     in property <string> app_version;
     in property <string> app_url;
-    in property <string> app_license;
     in-out property <string> file_path;
     in-out property <string> tree_text;
 
@@ -48,10 +47,7 @@ export component AppWindow inherits Window {
                     }
                     VerticalLayout {
                         Text { text: app_description; }
-                        VerticalLayout {
-                            Text { text: app_url; }
-                            Text { text: "License: \{app_license}"; }
-                        }
+                        Text { text: app_url; }
                     }
                 }
     
