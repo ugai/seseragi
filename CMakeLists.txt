@@ -15,9 +15,11 @@ find_package(spdlog CONFIG REQUIRED)
 
 # External git submodules
 add_subdirectory(external/nativefiledialog-extended)
-include_directories(external/strconv)
 
 # Slint
+set(SLINT_FEATURE_BACKEND_QT OFF)
+set(SLINT_NO_QT 1)
+set(SLINT_STYLE fluent)
 find_package(Slint QUIET)
 if (NOT Slint_FOUND)
   include(FetchContent)
@@ -35,7 +37,7 @@ endif (NOT Slint_FOUND)
 file(GLOB_RECURSE SOURCES src/*.cpp)
 add_executable(seseragi ${SOURCES})
 target_include_directories(seseragi PRIVATE include)
-target_sources(seseragi PRIVATE src/seseragi.manifest)
+# target_sources(seseragi PRIVATE src/seseragi.manifest)
 
 # Vcpkg ports
 target_link_libraries(seseragi PRIVATE Alembic::Alembic)

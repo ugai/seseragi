@@ -3,19 +3,13 @@
 
 #include <string>
 
-#include <strconv2.h>
-
 namespace seseragi::utils {
 
 /// @brief Convert string encoding to UTF-8.
 /// @param s
 /// @return
 static inline std::string convert_utf8(std::string &s) {
-#ifdef _WIN32
-  return cp_to_utf8(s, CP_ACP);
-#else
-  return s
-#endif
+  return s;
 };
 
 /// @brief Convert string encoding to system MBCS (Multi-Byte Character Set) for
@@ -23,11 +17,7 @@ static inline std::string convert_utf8(std::string &s) {
 /// @param s
 /// @return
 static inline std::string convert_mbcs_win(std::string &s) {
-#ifdef _WIN32
-  return utf8_to_cp(s, CP_ACP);
-#else
-  return s
-#endif
+  return s;
 };
 
 /// @brief Add space characers to stringstream.
