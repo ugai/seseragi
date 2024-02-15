@@ -79,6 +79,9 @@ target_link_libraries(seseragi PRIVATE nfd)
 # Slint
 slint_target_sources(seseragi ui/app_window.slint)
 target_link_libraries(seseragi PRIVATE Slint::Slint)
+# Enable resource embedding
+# - Reference: https://slint.dev/releases/1.4.1/docs/cpp/cmake_reference#resource-embedding
+set_property(TARGET seseragi PROPERTY SLINT_EMBED_RESOURCES embed-files)
 if (WIN32)
   # Set additional Win32 libraries to avoid build errors
   target_link_libraries(seseragi PRIVATE imm32.lib dwmapi.lib uxtheme.lib uiautomationcore.lib opengl32.lib glu32.lib)
