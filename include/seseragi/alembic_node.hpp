@@ -41,6 +41,32 @@ struct AbcNode {
       AbcNode::create_tree_text_recursively(ss, child.get(), depth + 1);
     }
   }
+
+  inline std::vector<std::string> &as_tree_list() const {
+    std::vector<std::string> strs{};
+    create_tree_list_recursively(strs, this);
+    return strs;
+  }
+
+  inline static void
+  create_tree_list_recursively(std::vector<std::string> &strs,
+                               const AbcNode *node, unsigned int depth = 0) {
+    spdlog::info("'{}'", node->name);
+
+    std::stringstream ss;
+    ss << node->name << std::endl;
+
+    for (const auto &[k, v] : node->meta_data) {
+      utils::indent(ss, depth + 1);
+      ss << std::format("- '{}': {}", k, v) << std::endl;
+    }
+
+    strs.push_back(ss.str());
+
+    for (const auto &child : node->children) {
+      AbcNode::create_tree_text_recursively(ss, child.get(), depth + 1);
+    }
+  }
 };
 
 } // namespace seseragi

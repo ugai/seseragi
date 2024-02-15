@@ -51,6 +51,7 @@ int main(int argc, char *argv[]) {
     ui->on_open_button_clicked([&ui] {
       const auto &dialog_result = show_file_dialog();
       if (dialog_result) {
+        ui->set_file_opened(false);
         const auto &abc_path = dialog_result.value();
         if (abc_path) {
           ui->set_file_path(abc_path.value().c_str());
@@ -71,10 +72,14 @@ int main(int argc, char *argv[]) {
       const auto &root_node = AbcReader::read_alembic_file(abc_path);
       if (root_node) {
         const auto &tree_text = root_node.value()->as_tree_text();
+        const auto &tree_list = root_node.value()->as_tree_list();
         ui->set_tree_text(tree_text.c_str());
+        // ui->set_tree_list(tree_list); // TODO: type conversion
+        ui->set_file_opened(true);
       } else {
         spdlog::error(root_node.error());
         ui->set_tree_text(root_node.error().c_str());
+        ui->set_file_opened(false);
       }
     });
   }

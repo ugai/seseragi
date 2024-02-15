@@ -10,8 +10,10 @@ export component AppWindow inherits Window {
     in property <string> app_description;
     in property <string> app_version;
     in property <string> app_url;
+    in-out property <bool> file_opened;
     in-out property <string> file_path;
     in-out property <string> tree_text;
+    in-out property <[string]> tree_list;
 
     callback open_button_clicked <=> open_button.clicked;
     callback reload_button_clicked <=> reload_button.clicked;
@@ -20,33 +22,34 @@ export component AppWindow inherits Window {
     about_popup := PopupWindow { 
         x: 1rem;
         y: 1rem;
+        width: root.width;
 
         Rectangle {
             background: Palette.background;
             border-color: Palette.border;
     
             VerticalBox {
-                HorizontalLayout {
-                    Text {
-                        text: app_name;
-                        font-size: 2rem;
-                        font-weight: 900;
-                    }
-                    Text { 
-                        text: " v\{app_version}";
-                        vertical-alignment: bottom;
-                        horizontal-stretch: 1;
-                    }
-                }
                 HorizontalBox  { 
                     Image {
-                        source: @image-url("../asset/icon-64.png");
-                        width: 64px;
-                        height: 64px;
+                        source: @image-url("../asset/icon-512.png");
+                        width: 96px;
+                        height: 96px;
                         padding-right: 16px;
                     }
                     VerticalLayout {
-                        Text { text: app_description; }
+                        HorizontalLayout {
+                            Text {
+                                text: app_name;
+                                font-size: 2rem;
+                                font-weight: 900;
+                            }
+                            Text { 
+                                text: " v\{app_version}";
+                                vertical-alignment: center;
+                                horizontal-stretch: 1;
+                            }
+                        }
+                        Text { text: app_description; wrap: word-wrap; }
                         Text { text: app_url; }
                     }
                 }
@@ -64,6 +67,7 @@ export component AppWindow inherits Window {
             }
             reload_button := Button {
                 text: "🔄️ Reload";
+                enabled: file_opened;
                 horizontal-stretch: 1;
             }
             about_button := Button {
@@ -75,6 +79,7 @@ export component AppWindow inherits Window {
         HorizontalBox {
             Text {
                 text: "File: ";
+                visible: file_path != "";
                 horizontal-stretch: 0;
             }
             Text {
