@@ -8,6 +8,7 @@
 
 #include <Alembic/Abc/All.h>
 #include <Alembic/Abc/ErrorHandler.h>
+#include <Alembic/AbcCoreFactory/IFactory.h>
 #include <Alembic/Util/Exception.h>
 
 #include "alembic_node.hpp"
@@ -27,9 +28,12 @@ public:
     }
 
     try {
-      Alembic::AbcCoreOgawa::ReadArchive reader;
-      Alembic::Abc::IArchive archive(reader, abc_file_path,
-                                     Alembic::Abc::ErrorHandler::kThrowPolicy);
+      Alembic::AbcCoreFactory::IFactory factory;
+      Alembic::Abc::IArchive archive = factory.getArchive(abc_file_path);
+      if (!archive.valid()) {
+        return std::unexpected{
+            std::format("invalid archive: '{}'", abc_file_path)};
+      }
 
       const auto obj = archive.getTop();
       auto root_node = std::make_shared<AbcNode>();

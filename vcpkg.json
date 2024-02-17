@@ -1,6 +1,11 @@
 {
 	"dependencies": [
-		"alembic",
+		{
+			"name": "alembic",
+			"features": [
+				"hdf5"
+			]
+		},
 		{
 			"name": "cxxopts",
 			"version>=": "3.0.0"
