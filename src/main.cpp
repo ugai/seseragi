@@ -17,13 +17,21 @@
 #include <seseragi/app.hpp>
 #include <seseragi/dialog.hpp>
 #include <seseragi/utils.hpp>
+#ifdef _WIN32
+#include <seseragi/win32.hpp>
+#endif
 
+// Slint
 #include "app_window.h"
 
 namespace fs = std::filesystem;
 using namespace seseragi;
 
 int main(int argc, char *argv[]) {
+#ifdef _WIN32
+  win32::CodePageEnforcer code_page_enforcer;
+#endif
+
   cxxopts::Options options(AppName.data(), AppDescription.data());
 
   // clang-format off
