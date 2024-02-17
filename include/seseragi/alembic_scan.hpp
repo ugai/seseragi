@@ -54,6 +54,7 @@ private:
     if (depth > MaxRecursionDepth)
       return;
 
+    node->depth = depth;
     node->name = obj.getName();
     node->full_name = obj.getFullName();
     const auto meta_data = obj.getMetaData();

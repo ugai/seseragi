@@ -87,7 +87,8 @@
         "variant": "cpp",
         "random": "cpp",
         "string_view": "cpp",
-        "*.in": "cpp"
+        "*.in": "cpp",
+        "cinttypes": "cpp"
     },
     "dotnet.defaultSolution": "build/seseragi.sln",
     "C_Cpp.errorSquiggles": "enabled"

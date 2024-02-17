@@ -1,66 +1,35 @@
-import { AboutSlint, Button, VerticalBox, GridBox, LineEdit, HorizontalBox, Palette, ScrollView, StandardButton } from "std-widgets.slint";
+import { Button, VerticalBox, HorizontalBox, Palette, ScrollView } from "std-widgets.slint";
+
+import { AlembicNodeList, SlintAlembicNodeListItem } from "alembic_node_list.slint";
+import { AboutPopupContent, AppInfo } from "app_info.slint";
 
 export component AppWindow inherits Window {
-    title: app_name;
+    title: app_info.name;
     icon: @image-url("../asset/icon-64.png");
     preferred-width: 500px;
     preferred-height: 500px;
 
-    in property <string> app_name;
-    in property <string> app_description;
-    in property <string> app_version;
-    in property <string> app_url;
+    in property <AppInfo> app_info;
+    in property <[SlintAlembicNodeListItem]> tree_list;
     in-out property <bool> file_opened;
     in-out property <string> file_path;
-    in-out property <string> tree_text;
-    in-out property <[string]> tree_list;
 
     callback open_button_clicked <=> open_button.clicked;
     callback reload_button_clicked <=> reload_button.clicked;
     callback reload_file;
 
-    about_popup := PopupWindow { 
+    about_popup := PopupWindow {
+        width: root.width - 2rem;
+        padding-right: 1rem;
         x: 1rem;
         y: 1rem;
-        width: root.width;
-
-        Rectangle {
-            background: Palette.background;
-            border-color: Palette.border;
-    
-            VerticalBox {
-                HorizontalBox  { 
-                    Image {
-                        source: @image-url("../asset/icon-512.png");
-                        width: 96px;
-                        height: 96px;
-                        padding-right: 16px;
-                    }
-                    VerticalLayout {
-                        HorizontalLayout {
-                            Text {
-                                text: app_name;
-                                font-size: 2rem;
-                                font-weight: 900;
-                            }
-                            Text { 
-                                text: " v\{app_version}";
-                                vertical-alignment: center;
-                                horizontal-stretch: 1;
-                            }
-                        }
-                        Text { text: app_description; wrap: word-wrap; }
-                        Text { text: app_url; }
-                    }
-                }
-    
-                AboutSlint { preferred-height: 100px; }
-            }
+        AboutPopupContent {
+            app_info: app_info;
         }
     }
 
     VerticalBox {
-        HorizontalBox {
+        button_bar := HorizontalBox {
             open_button := Button {
                 text: "📂 Open...";
                 horizontal-stretch: 1;
@@ -72,20 +41,21 @@ export component AppWindow inherits Window {
             }
             about_button := Button {
                 text: "❔";
-                clicked => { about_popup.show(); }
+                clicked => { about_popup.show() }
             }
         }
 
         HorizontalBox {
+            visible: file_path != "";
             Text {
                 text: "File: ";
-                visible: file_path != "";
                 horizontal-stretch: 0;
             }
-            Text {
+            TextInput {
                 text: file_path;
                 horizontal-alignment: left;
                 horizontal-stretch: 1;
+                read-only: true;
             }
         }
 
@@ -94,10 +64,11 @@ export component AppWindow inherits Window {
             preferred-height: scroll_inner.preferred-height;
 
             scroll_inner := VerticalBox {
-                Text {
-                    text: tree_text;
-                    vertical-alignment: top;
+                AlembicNodeList {
+                    indent_width: 16px;
+                    nodes: tree_list;
                 }
+                Rectangle { vertical-stretch: 1; } // filler
             }
         }
     }

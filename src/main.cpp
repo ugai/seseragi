@@ -51,10 +51,12 @@ int main(int argc, char *argv[]) {
 
   // UI bindings
   {
-    ui->set_app_name(AppName);
-    ui->set_app_description(AppDescription);
-    ui->set_app_version(AppVersion);
-    ui->set_app_url(AppUrl);
+    AppInfo app_info;
+    app_info.name = AppName;
+    app_info.description = AppDescription;
+    app_info.version = AppVersion;
+    app_info.url = AppUrl;
+    ui->set_app_info(app_info);
 
     ui->on_open_button_clicked([&ui] {
       const auto &dialog_result = show_file_dialog();
@@ -68,7 +70,8 @@ int main(int argc, char *argv[]) {
         }
       } else {
         spdlog::error(dialog_result.error());
-        ui->set_tree_text(dialog_result.error().c_str());
+        // TODO: Display error message
+        // ui->set_tree_text(dialog_result.error().c_str());
       }
     });
 
@@ -77,16 +80,39 @@ int main(int argc, char *argv[]) {
     ui->on_reload_file([&ui] {
       auto abc_path = std::string(ui->get_file_path());
 
+      // FIXME: 💀 The most hardest part of this app.
       const auto &root_node = AbcReader::read_alembic_file(abc_path);
       if (root_node) {
-        const auto &tree_text = root_node.value()->as_tree_text();
-        const auto &tree_list = root_node.value()->as_tree_list();
-        ui->set_tree_text(tree_text.c_str());
-        // ui->set_tree_list(tree_list); // TODO: type conversion
+        std::vector<std::shared_ptr<AbcNode>> src_nodes{};
+        root_node.value()->as_list(src_nodes);
+        std::vector<SlintAlembicNodeListItem> dst_nodes{};
+
+        for (const auto &src_node : src_nodes) {
+          SlintAlembicNodeListItem dst_node;
+          dst_node.indentation = src_node->depth;
+          dst_node.name = src_node->name;
+
+          std::vector<SlintAlembicMetadataItem> dst_meta_items{};
+          for (const auto &[k, v] : src_node->meta_data) {
+            SlintAlembicMetadataItem dst_meta_item;
+            dst_meta_item.key = k;
+            dst_meta_item.value = v;
+            dst_meta_items.push_back(dst_meta_item);
+          }
+          dst_node.metadata =
+              (std::make_shared<slint::VectorModel<SlintAlembicMetadataItem>>(
+                  dst_meta_items));
+
+          dst_nodes.push_back(dst_node);
+        }
+        ui->set_tree_list(
+            std::make_shared<slint::VectorModel<SlintAlembicNodeListItem>>(
+                dst_nodes));
         ui->set_file_opened(true);
       } else {
         spdlog::error(root_node.error());
-        ui->set_tree_text(root_node.error().c_str());
+        // TODO: Display error message
+        // ui->set_tree_text(root_node.error().c_str());
         ui->set_file_opened(false);
       }
     });
