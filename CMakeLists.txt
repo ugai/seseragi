@@ -69,7 +69,8 @@ if (MSVC)
 endif()
 
 # Seseragi Test
-add_executable(seseragi_test test/hello_test.cpp)
+file(GLOB_RECURSE CPP_TEST_SOURCES tests/*.cpp)
+add_executable(seseragi_test ${CPP_TEST_SOURCES})
 target_link_libraries(seseragi_test GTest::gtest_main)
 
 # Vcpkg ports

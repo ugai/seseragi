@@ -10,9 +10,9 @@ namespace seseragi::win32 {
 
 class CodePageEnforcer {
 public:
-  inline CodePageEnforcer(unsigned int codepage = CP_UTF8) {
+  inline CodePageEnforcer(unsigned int code_page = CP_UTF8) {
     this->last_code_page = GetConsoleOutputCP();
-    SetConsoleOutputCP(codepage);
+    SetConsoleOutputCP(code_page);
   }
   inline ~CodePageEnforcer() { SetConsoleOutputCP(this->last_code_page); }
 
