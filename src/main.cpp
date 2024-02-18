@@ -65,17 +65,21 @@ int main(int argc, char *argv[]) {
         const auto &abc_path = dialog_result.value();
         if (abc_path) {
           ui->set_file_path(abc_path.value().c_str());
-
           ui->invoke_reload_file();
         }
       } else {
+        // TODO: Display error message to user
         spdlog::error(dialog_result.error());
-        // TODO: Display error message
-        // ui->set_tree_text(dialog_result.error().c_str());
+        ui->invoke_clear_file();
       }
     });
 
     ui->on_reload_button_clicked([&ui] { ui->invoke_reload_file(); });
+
+    ui->on_clear_file([&ui] {
+      ui->set_tree_list({}); // clear
+      ui->set_file_opened(false);
+    });
 
     ui->on_reload_file([&ui] {
       auto abc_path = std::string(ui->get_file_path());
@@ -85,8 +89,8 @@ int main(int argc, char *argv[]) {
       if (root_node) {
         std::vector<std::shared_ptr<AbcNode>> src_nodes{};
         root_node.value()->as_list(src_nodes);
-        std::vector<SlintAlembicNodeListItem> dst_nodes{};
 
+        std::vector<SlintAlembicNodeListItem> dst_nodes{};
         for (const auto &src_node : src_nodes) {
           SlintAlembicNodeListItem dst_node;
           dst_node.indentation = src_node->depth;
@@ -105,15 +109,15 @@ int main(int argc, char *argv[]) {
 
           dst_nodes.push_back(dst_node);
         }
+
         ui->set_tree_list(
             std::make_shared<slint::VectorModel<SlintAlembicNodeListItem>>(
                 dst_nodes));
         ui->set_file_opened(true);
       } else {
+        // TODO: Display error message to user
         spdlog::error(root_node.error());
-        // TODO: Display error message
-        // ui->set_tree_text(root_node.error().c_str());
-        ui->set_file_opened(false);
+        ui->invoke_clear_file();
       }
     });
   }
