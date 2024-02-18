@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 set(CMAKE_CXX_STANDARD 23)
+enable_testing()
 
 project(seseragi
   VERSION 0.1.0
@@ -25,6 +26,7 @@ configure_file(
 include($ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 find_package(Alembic CONFIG REQUIRED)
 find_package(cxxopts CONFIG REQUIRED)
+find_package(GTest CONFIG REQUIRED)
 find_package(Imath CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
@@ -66,9 +68,14 @@ if (MSVC)
 	set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 endif()
 
+# Seseragi Test
+add_executable(seseragi_test test/hello_test.cpp)
+target_link_libraries(seseragi_test GTest::gtest_main)
+
 # Vcpkg ports
 target_link_libraries(seseragi PRIVATE Alembic::Alembic)
 target_link_libraries(seseragi PRIVATE cxxopts::cxxopts)
+target_link_libraries(seseragi PRIVATE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
 target_link_libraries(seseragi PRIVATE Imath::Imath Imath::ImathConfig)
 target_link_libraries(seseragi PRIVATE spdlog::spdlog)
 
@@ -91,5 +98,6 @@ endif()
 
 install(TARGETS seseragi RUNTIME)
 
-include(CTest)
-enable_testing()
+# Tests
+include(GoogleTest)
+gtest_discover_tests(seseragi_test)
