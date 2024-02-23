@@ -1,0 +1,10 @@
+import { VerticalBox, TextEdit } from "std-widgets.slint";
+
+export component AbcJsonText inherits VerticalLayout {
+    in property <string> text;
+    TextEdit {
+        text: text;
+        wrap: no-wrap;
+        read-only: true;
+    }
+}

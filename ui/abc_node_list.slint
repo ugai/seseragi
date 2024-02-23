@@ -1,0 +1,90 @@
+import { HorizontalBox, VerticalBox, GridBox, Palette } from "std-widgets.slint";
+
+export struct AbcKvEntry {
+    key: string,
+    value: string,
+}
+
+export struct AbcNode {
+    indentation: int,
+    name: string,
+    metadata: [AbcKvEntry],
+}
+
+component HorizontalRule inherits Path {
+    stroke: Palette.border;
+    stroke-width: 1px;
+    MoveTo { x: 0; y: parent.height / 1px; }
+    LineTo { x: parent.width / 1px; y: parent.height / 1px; }
+}
+
+component TitleHeader inherits VerticalLayout {
+    vertical-stretch: 0;
+    padding-bottom: 1rem;
+    in property <string> text;
+    in property <int> font-weight: 900;
+    Text { text: text; font-weight: font-weight; }
+    HorizontalRule{}
+}
+
+export component AbcNodeList inherits VerticalLayout {
+    in-out property <length> indent_width;
+    in-out property <[AbcKvEntry]> archive_items;
+    in-out property <[AbcNode]> nodes;
+
+    archive_section := VerticalLayout {
+        padding-bottom: 1rem;
+
+        TitleHeader { text: "Archive"; }
+
+        VerticalLayout {
+            for metadata_item in archive_items: HorizontalLayout {
+                Text {
+                    text: "\{metadata-item.key}: ";
+                    color: Palette.foreground.transparentize(0.2);
+                }
+                Text {
+                    text: metadata-item.value;
+                    horizontal-alignment: left;
+                    horizontal-stretch: 1;
+                }
+            }
+        }
+    }
+
+    objects_section := VerticalLayout {
+        TitleHeader { text: "Objects"; }
+
+        for node in nodes : HorizontalLayout {
+            padding-bottom: 1rem;
+
+            indent_block := Rectangle {
+                width: indent_width * node.indentation;
+            }
+
+            content_block := Rectangle {
+                content := VerticalLayout {
+                    Text {
+                        text: node.name;
+                        font-weight: 700;
+                    }
+                    VerticalLayout {
+                        for metadata_item in node.metadata: HorizontalLayout {
+                            Text {
+                                text: "\{metadata-item.key}: ";
+                                color: Palette.foreground.transparentize(0.2);
+                            }
+                            Text {
+                                text: metadata-item.value;
+                                horizontal-alignment: left;
+                                horizontal-stretch: 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+        
+    filler := Rectangle { vertical-stretch: 1; }
+}

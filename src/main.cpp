@@ -12,8 +12,9 @@
 #include <nfd.hpp>
 #include <spdlog/spdlog.h>
 
-#include <seseragi/alembic_node.hpp>
-#include <seseragi/alembic_scan.hpp>
+#include <seseragi/alembic/archive.hpp>
+#include <seseragi/alembic/node.hpp>
+#include <seseragi/alembic/reader.hpp>
 #include <seseragi/app.hpp>
 #include <seseragi/dialog.hpp>
 #include <seseragi/utils.hpp>
@@ -21,7 +22,7 @@
 #include <seseragi/win32.hpp>
 #endif
 
-// Slint
+// Slint generated header
 #include "app_window.h"
 
 namespace fs = std::filesystem;
@@ -42,6 +43,8 @@ int main(int argc, char *argv[]) {
 
   options.parse_positional({"file"});
   const auto args = options.parse(argc, argv);
+
+  // Show help and exit
   if (args.count("help")) {
     std::cout << options.help() << std::endl;
     return EXIT_SUCCESS;
@@ -61,15 +64,15 @@ int main(int argc, char *argv[]) {
     ui->on_open_button_clicked([&ui] {
       const auto &dialog_result = show_file_dialog();
       if (dialog_result) {
-        ui->set_file_opened(false);
         const auto &abc_path = dialog_result.value();
         if (abc_path) {
           ui->set_file_path(abc_path.value().c_str());
           ui->invoke_reload_file();
         }
       } else {
-        // TODO: Display error message to user
         spdlog::error(dialog_result.error());
+        ui->set_error_message(dialog_result.error().c_str());
+        ui->set_has_error(true);
         ui->invoke_clear_file();
       }
     });
@@ -78,45 +81,71 @@ int main(int argc, char *argv[]) {
 
     ui->on_clear_file([&ui] {
       ui->set_tree_list({}); // clear
-      ui->set_file_opened(false);
     });
 
+    // FIXME: 💀 The most hardest part of this app.
+    //        This section converts the Seseragi internal
+    //        data model into the Slint data model.
     ui->on_reload_file([&ui] {
-      auto abc_path = std::string(ui->get_file_path());
+      const auto abc_path = std::string(ui->get_file_path());
 
-      // FIXME: 💀 The most hardest part of this app.
-      const auto &root_node = AbcReader::read_alembic_file(abc_path);
-      if (root_node) {
-        std::vector<std::shared_ptr<AbcNode>> src_nodes{};
-        root_node.value()->as_list(src_nodes);
+      // shorthands
+      typedef std::shared_ptr<alembic::Node> NodePtr;
+      typedef slint::VectorModel<AbcNode> AbcNodeVecModel;
+      typedef slint::VectorModel<AbcKvEntry> AbcKvVecModel;
+      typedef slint::SharedString SStr;
 
-        std::vector<SlintAlembicNodeListItem> dst_nodes{};
-        for (const auto &src_node : src_nodes) {
-          SlintAlembicNodeListItem dst_node;
-          dst_node.indentation = src_node->depth;
-          dst_node.name = src_node->name;
+      const auto &archive_result = alembic::Reader::read_alembic_file(abc_path);
+      if (archive_result) {
+        const auto archive = archive_result.value();
 
-          std::vector<SlintAlembicMetadataItem> dst_meta_items{};
-          for (const auto &[k, v] : src_node->meta_data) {
-            SlintAlembicMetadataItem dst_meta_item;
-            dst_meta_item.key = k;
-            dst_meta_item.value = v;
-            dst_meta_items.push_back(dst_meta_item);
-          }
-          dst_node.metadata =
-              (std::make_shared<slint::VectorModel<SlintAlembicMetadataItem>>(
-                  dst_meta_items));
-
-          dst_nodes.push_back(dst_node);
+        // Alembic toplevel metadata
+        std::vector<AbcKvEntry> archive_items;
+        {
+          // clang-format off
+          archive_items.push_back(AbcKvEntry{"core_type_name", SStr(archive->core_type_name)});
+          for (const auto& ts : archive->time_samplings)
+            archive_items.push_back(AbcKvEntry{"time_sampling", SStr(ts)});
+          archive_items.push_back(AbcKvEntry{"start_time", SStr(std::to_string(archive->start_time))});
+          archive_items.push_back(AbcKvEntry{"end_time", SStr(std::to_string(archive->end_time))});
+          // clang-format on
         }
+        ui->set_archive_items(std::make_shared<AbcKvVecModel>(archive_items));
 
-        ui->set_tree_list(
-            std::make_shared<slint::VectorModel<SlintAlembicNodeListItem>>(
-                dst_nodes));
-        ui->set_file_opened(true);
+        // Alembic object hierarchies
+        std::vector<AbcNode> dst_nodes;
+        {
+          for (const auto &src_node : archive->all_nodes) {
+            AbcNode dst_node;
+            dst_node.indentation = src_node->depth;
+            dst_node.name = src_node->name;
+
+            std::vector<AbcKvEntry> dst_meta_items;
+            for (const auto &[k, v] : src_node->meta_data) {
+              AbcKvEntry dst_meta_item;
+              dst_meta_item.key = k;
+              dst_meta_item.value = v;
+              dst_meta_items.push_back(dst_meta_item);
+            }
+            dst_node.metadata =
+                (std::make_shared<AbcKvVecModel>(dst_meta_items));
+
+            dst_nodes.push_back(dst_node);
+          }
+        }
+        ui->set_tree_list(std::make_shared<AbcNodeVecModel>(dst_nodes));
+
+        auto json = nlohmann::ordered_json::object();
+        archive->to_json(json);
+        auto jc = json.dump(4);
+        spdlog::info(jc);
+        ui->set_json_text(jc.c_str());
+
+        ui->set_has_error(false);
       } else {
-        // TODO: Display error message to user
-        spdlog::error(root_node.error());
+        spdlog::error(archive_result.error());
+        ui->set_error_message(archive_result.error().c_str());
+        ui->set_has_error(true);
         ui->invoke_clear_file();
       }
     });
