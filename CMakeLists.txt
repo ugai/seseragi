@@ -28,6 +28,7 @@ find_package(Alembic CONFIG REQUIRED)
 find_package(cxxopts CONFIG REQUIRED)
 find_package(GTest CONFIG REQUIRED)
 find_package(Imath CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 # External git submodules
@@ -78,6 +79,7 @@ target_link_libraries(seseragi PRIVATE Alembic::Alembic)
 target_link_libraries(seseragi PRIVATE cxxopts::cxxopts)
 target_link_libraries(seseragi PRIVATE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
 target_link_libraries(seseragi PRIVATE Imath::Imath Imath::ImathConfig)
+target_link_libraries(seseragi PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(seseragi PRIVATE spdlog::spdlog)
 
 # Native File Dialog Extended
