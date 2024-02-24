@@ -38,7 +38,7 @@ struct Archive {
   };
 
   inline void to_json(nlohmann::ordered_json &j) {
-    j["core_type_name"] = core_type_name;
+    j["core_type"] = core_type_name;
     j["time_samplings"] = time_samplings;
     j["start_time"] = start_time;
     j["end_time"] = end_time;

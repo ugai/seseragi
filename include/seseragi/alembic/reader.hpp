@@ -48,7 +48,20 @@ public:
 
       for (int i = 0; i < archive.getNumTimeSamplings(); i++) {
         const auto ts = archive.getTimeSampling(i);
-        // TODO: Add TimeSampling info.
+        const auto tst = ts->getTimeSamplingType();
+        const auto time_per_cycle = tst.getTimePerCycle();
+        std::stringstream ss;
+        if (tst.isAcyclic())
+          ss << "Acyclic";
+        else if (tst.isCyclic())
+          ss << "Cyclic";
+        else if (tst.isUniform())
+          ss << "Uniform";
+        ss << std::format(", numStoredTimes={}, cyclesPerTime={}, "
+                          "timePerCycle={}, samplesPerCycle={}",
+                          ts->getNumStoredTimes(), 1.0 / time_per_cycle,
+                          time_per_cycle, tst.getNumSamplesPerCycle());
+        archive_info->time_samplings.push_back(ss.str());
       }
 
       scan_alembic_tree_recursively(archive_info->all_nodes,
