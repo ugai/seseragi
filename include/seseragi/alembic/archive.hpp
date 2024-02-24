@@ -38,10 +38,10 @@ struct Archive {
   };
 
   inline void to_json(nlohmann::ordered_json &j) {
-    j["core_type"] = core_type_name;
-    j["time_samplings"] = time_samplings;
-    j["start_time"] = start_time;
-    j["end_time"] = end_time;
+    j["coreType"] = core_type_name;
+    j["timeSamplings"] = time_samplings;
+    j["startTime"] = start_time;
+    j["endTime"] = end_time;
     auto tj = nlohmann::ordered_json::object();
     top_node->to_json(tj);
     j["top"] = tj;

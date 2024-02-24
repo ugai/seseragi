@@ -33,8 +33,8 @@ struct Node : public std::enable_shared_from_this<Node> {
 
   inline void to_json(nlohmann::ordered_json &j) {
     j["name"] = name;
-    j["full_name"] = full_name;
-    j["meta_data"] = meta_data;
+    j["fullName"] = full_name;
+    j["metadata"] = meta_data;
 
     if (children.size() == 0)
       return;

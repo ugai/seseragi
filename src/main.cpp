@@ -103,13 +103,13 @@ int main(int argc, char *argv[]) {
         std::vector<AbcKvEntry> archive_items;
         {
           // clang-format off
-          archive_items.push_back(AbcKvEntry{"core_type", SStr(archive->core_type_name)});
+          archive_items.push_back(AbcKvEntry{"coreType", SStr(archive->core_type_name)});
           for (size_t i = 0; const auto& ts : archive->time_samplings) {
-            auto k = SStr(std::format("time_sampling[{}]", i++));
+            auto k = SStr(std::format("timeSampling[{}]", i++));
             archive_items.push_back(AbcKvEntry{k, SStr(ts)});
           }
-          archive_items.push_back(AbcKvEntry{"start_time", SStr(std::to_string(archive->start_time))});
-          archive_items.push_back(AbcKvEntry{"end_time", SStr(std::to_string(archive->end_time))});
+          archive_items.push_back(AbcKvEntry{"startTime", SStr(std::to_string(archive->start_time))});
+          archive_items.push_back(AbcKvEntry{"endTime", SStr(std::to_string(archive->end_time))});
           // clang-format on
         }
         ui->set_archive_items(std::make_shared<AbcKvVecModel>(archive_items));

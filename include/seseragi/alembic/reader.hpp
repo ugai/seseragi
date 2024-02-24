@@ -57,8 +57,8 @@ public:
           ss << "Cyclic";
         else if (tst.isUniform())
           ss << "Uniform";
-        ss << std::format(", numStoredTimes={}, cyclesPerTime={}, "
-                          "timePerCycle={}, samplesPerCycle={}",
+        ss << std::format(" (storedTimes={}, cyclesPerTime={}, "
+                          "timePerCycle={}, samplesPerCycle={})",
                           ts->getNumStoredTimes(), 1.0 / time_per_cycle,
                           time_per_cycle, tst.getNumSamplesPerCycle());
         archive_info->time_samplings.push_back(ss.str());
