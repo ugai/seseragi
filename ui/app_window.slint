@@ -1,7 +1,7 @@
 import { Button, ComboBox, VerticalBox, HorizontalBox, Palette, ScrollView, GridBox, LineEdit, TextEdit } from "std-widgets.slint";
 
-import { AbcNodeList, AbcKvEntry, AbcNode } from "abc_node_list.slint";
-import { AbcJsonText } from "abc_json_text.slint";
+import { AbcListView, AbcKvEntry, AbcNode } from "abc_list_view.slint";
+import { AbcJsonView } from "abc_json_view.slint";
 import { AboutPopupContent, AppInfo } from "app_info.slint";
 
 export component AppWindow inherits Window {
@@ -13,9 +13,9 @@ export component AppWindow inherits Window {
     in-out property <string> file_path: "";
     
     in property <AppInfo> app_info;
-    in property <[AbcKvEntry]> archive_items;
-    in property <[AbcNode]> tree_list;
-    in property <string> json_text;
+    in property <[AbcKvEntry]> abc_list_view_archive_items;
+    in property <[AbcNode]> abc_list_view_nodes; 
+    in property <string> abc_json_view_text;
     in property <bool> has_error: false;
     in property <string> error_message;
 
@@ -121,14 +121,14 @@ export component AppWindow inherits Window {
                             }
                         }
                         
-                        if !has_error && is_file_specified && view_mode_name == "List" : AbcNodeList {
+                        if !has_error && is_file_specified && view_mode_name == "List" : AbcListView {
                             indent_width: 16px;
-                            archive_items: archive_items;
-                            nodes: tree_list;
+                            archive_items: abc_list_view_archive_items;
+                            nodes: abc_list_view_nodes;
                         }
 
-                        if !has_error && is_file_specified && view_mode_name == "JSON" : AbcJsonText {
-                            text: json_text;
+                        if !has_error && is_file_specified && view_mode_name == "JSON" : AbcJsonView {
+                            text: abc_json_view_text;
                         }
                     }
                 }

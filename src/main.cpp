@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
           archive_items.push_back(AbcKvEntry{"endTime", SStr(std::to_string(archive->end_time))});
           // clang-format on
         }
-        ui->set_archive_items(std::make_shared<AbcKvVecModel>(archive_items));
+        ui->set_abc_list_view_archive_items(std::make_shared<AbcKvVecModel>(archive_items));
 
         // Alembic object hierarchies
         std::vector<AbcNode> dst_nodes;
@@ -135,13 +135,13 @@ int main(int argc, char *argv[]) {
             dst_nodes.push_back(dst_node);
           }
         }
-        ui->set_tree_list(std::make_shared<AbcNodeVecModel>(dst_nodes));
+        ui->set_abc_list_view_nodes(std::make_shared<AbcNodeVecModel>(dst_nodes));
 
         auto json = nlohmann::ordered_json::object();
         archive->to_json(json);
         auto jc = json.dump(4);
         spdlog::info(jc);
-        ui->set_json_text(jc.c_str());
+        ui->set_abc_json_view_text(jc.c_str());
 
         ui->set_has_error(false);
       } else {
