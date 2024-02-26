@@ -24,8 +24,6 @@ export component AppWindow inherits Window {
     property <string> view_mode_name: "List";
 
     callback open_button_clicked <=> open_button.clicked;
-    callback reload_button_clicked <=> reload_button.clicked;
-    callback clear_file;
     callback reload_file;
 
     about_popup := PopupWindow {
@@ -55,10 +53,11 @@ export component AppWindow inherits Window {
                     text: "🔄️ Reload";
                     enabled: is_file_specified;
                     horizontal-stretch: 1;
+                    clicked => { reload_file() }
                 }
                 about_button := Button {
                     text: "❔";
-                    clicked => { about_popup.show(); }
+                    clicked => { about_popup.show() }
                 }
             }
 
@@ -86,7 +85,7 @@ export component AppWindow inherits Window {
                     ComboBox {
                         model: view_mode_names;
                         current-value: view_mode_name;
-                        selected(s) => { view_mode_name = s; }
+                        selected(s) => { view_mode_name = s }
                         max-width: 200px;
                     }
                 }

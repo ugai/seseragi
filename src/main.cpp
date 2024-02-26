@@ -26,6 +26,7 @@
 #include "app_window.h"
 
 namespace fs = std::filesystem;
+typedef slint::SharedString SStr;
 using namespace seseragi;
 
 int main(int argc, char *argv[]) {
@@ -61,39 +62,38 @@ int main(int argc, char *argv[]) {
     app_info.url = AppUrl;
     ui->set_app_info(app_info);
 
-    ui->on_open_button_clicked([&ui] {
+    const auto handle_open_error = [&ui](const std::string &error_message) {
+      spdlog::error(error_message);
+      ui->set_error_message(error_message.c_str());
+      ui->set_has_error(true);
+
+      ui->set_abc_list_view_archive_items({});
+      ui->set_abc_list_view_nodes({});
+      ui->set_abc_json_view_text("");
+    };
+
+    ui->on_open_button_clicked([&ui, &handle_open_error] {
       const auto &dialog_result = show_file_dialog();
       if (dialog_result) {
-        const auto &abc_path = dialog_result.value();
-        if (abc_path) {
-          ui->set_file_path(abc_path.value().c_str());
+        if (const auto &path = dialog_result.value(); !path.empty()) {
+          ui->set_file_path(SStr(path.string()));
           ui->invoke_reload_file();
         }
       } else {
-        spdlog::error(dialog_result.error());
-        ui->set_error_message(dialog_result.error().c_str());
-        ui->set_has_error(true);
-        ui->invoke_clear_file();
+        handle_open_error(dialog_result.error().c_str());
       }
-    });
-
-    ui->on_reload_button_clicked([&ui] { ui->invoke_reload_file(); });
-
-    ui->on_clear_file([&ui] {
-      ui->set_tree_list({}); // clear
     });
 
     // FIXME: 💀 The most hardest part of this app.
     //        This section converts the Seseragi internal
     //        data model into the Slint data model.
-    ui->on_reload_file([&ui] {
+    ui->on_reload_file([&ui, &handle_open_error] {
       const auto abc_path = std::string(ui->get_file_path());
 
       // shorthands
       typedef std::shared_ptr<alembic::Node> NodePtr;
       typedef slint::VectorModel<AbcNode> AbcNodeVecModel;
       typedef slint::VectorModel<AbcKvEntry> AbcKvVecModel;
-      typedef slint::SharedString SStr;
 
       const auto &archive_result = alembic::Reader::read_alembic_file(abc_path);
       if (archive_result) {
@@ -112,7 +112,8 @@ int main(int argc, char *argv[]) {
           archive_items.push_back(AbcKvEntry{"endTime", SStr(std::to_string(archive->end_time))});
           // clang-format on
         }
-        ui->set_abc_list_view_archive_items(std::make_shared<AbcKvVecModel>(archive_items));
+        ui->set_abc_list_view_archive_items(
+            std::make_shared<AbcKvVecModel>(archive_items));
 
         // Alembic object hierarchies
         std::vector<AbcNode> dst_nodes;
@@ -135,7 +136,8 @@ int main(int argc, char *argv[]) {
             dst_nodes.push_back(dst_node);
           }
         }
-        ui->set_abc_list_view_nodes(std::make_shared<AbcNodeVecModel>(dst_nodes));
+        ui->set_abc_list_view_nodes(
+            std::make_shared<AbcNodeVecModel>(dst_nodes));
 
         auto json = nlohmann::ordered_json::object();
         archive->to_json(json);
@@ -145,10 +147,7 @@ int main(int argc, char *argv[]) {
 
         ui->set_has_error(false);
       } else {
-        spdlog::error(archive_result.error());
-        ui->set_error_message(archive_result.error().c_str());
-        ui->set_has_error(true);
-        ui->invoke_clear_file();
+        handle_open_error(archive_result.error().c_str());
       }
     });
   }
