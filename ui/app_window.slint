@@ -1,0 +1,137 @@
+import { Button, ComboBox, VerticalBox, HorizontalBox, Palette, ScrollView, GridBox, LineEdit, TextEdit } from "std-widgets.slint";
+
+import { AbcListView, AbcKvEntry, AbcNode } from "abc_list_view.slint";
+import { AbcJsonView } from "abc_json_view.slint";
+import { AboutPopupContent, AppInfo } from "app_info.slint";
+
+export component AppWindow inherits Window {
+    title: app_info.name;
+    icon: @image-url("../asset/icon-64.png");
+    preferred-width: 600px;
+    preferred-height: 800px;
+
+    in-out property <string> file_path: "";
+    
+    in property <AppInfo> app_info;
+    in property <[AbcKvEntry]> abc_list_view_archive_items;
+    in property <[AbcNode]> abc_list_view_nodes; 
+    in property <string> abc_json_view_text;
+    in property <bool> has_error: false;
+    in property <string> error_message;
+
+    property <bool> is_file_specified: file_path != "";
+    property <[string]> view_mode_names: ["List", "JSON"];
+    property <string> view_mode_name: "List";
+
+    callback open_button_clicked <=> open_button.clicked;
+    callback reload_file;
+
+    about_popup := PopupWindow {
+        width: root.width - 2rem;
+        padding-right: 1rem;
+        x: 1rem;
+        y: 1rem;
+        AboutPopupContent {
+            app_info: app_info;
+        }
+    }
+    
+    VerticalLayout {
+        command_bar := VerticalBox {
+            padding-left: 0;
+            padding-right: 0;
+
+            HorizontalBox {
+                padding-top: 0;
+                padding-bottom: 0;
+
+                open_button := Button {
+                    text: "📂 Open...";
+                    horizontal-stretch: 1;
+                }
+                reload_button := Button {
+                    text: "🔄️ Reload";
+                    enabled: is_file_specified;
+                    horizontal-stretch: 1;
+                    clicked => { reload_file() }
+                }
+                about_button := Button {
+                    text: "❔";
+                    clicked => { about_popup.show() }
+                }
+            }
+
+            if is_file_specified: GridBox {
+                padding-top: 0;
+                padding-bottom: 0;
+
+                Row {
+                    Text {
+                        text: "File";
+                        vertical-alignment: center;
+                    }
+                    LineEdit {
+                        text: file_path;
+                        read-only: true;
+                        colspan: 2;
+                    }
+                }
+
+                Row {
+                    Text {
+                        text: "View";
+                        vertical-alignment: center;
+                    }
+                    ComboBox {
+                        model: view_mode_names;
+                        current-value: view_mode_name;
+                        selected(s) => { view_mode_name = s }
+                        max-width: 200px;
+                    }
+                }
+            }
+        }
+
+        VerticalLayout {
+            padding-top: 0;
+            padding-bottom: 2px;
+            padding-left: 2px;
+            padding-right: 2px;
+
+            preferred-width: scroll_inner.preferred-width;
+            preferred-height: scroll_inner.preferred-height;
+
+            Rectangle {
+                border-width: 1px;
+                border-radius: 4px;
+                border-color: Palette.border;
+    
+                ScrollView {
+                    scroll_inner := VerticalBox {
+                        // Alert box
+                        if has_error: Rectangle {
+                            padding: 1rem;
+                            background: red.with-alpha(0.2);
+                
+                            Text { 
+                                text: error_message;
+                                wrap: word-wrap;
+                                vertical-alignment: top;
+                            }
+                        }
+                        
+                        if !has_error && is_file_specified && view_mode_name == "List" : AbcListView {
+                            indent_width: 16px;
+                            archive_items: abc_list_view_archive_items;
+                            nodes: abc_list_view_nodes;
+                        }
+
+                        if !has_error && is_file_specified && view_mode_name == "JSON" : AbcJsonView {
+                            text: abc_json_view_text;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

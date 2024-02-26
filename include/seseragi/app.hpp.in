@@ -1,0 +1,16 @@
+// @DO_NOT_MODIFY_COMMENT@
+
+#ifndef SESERAGI_APP_H
+#define SESERAGI_APP_H
+
+#include <string_view>
+
+namespace seseragi {
+
+constexpr std::string_view AppName = "@PROJECT_NAME@";
+constexpr std::string_view AppDescription = "@PROJECT_DESCRIPTION@";
+constexpr std::string_view AppVersion = "@PROJECT_VERSION@";
+constexpr std::string_view AppUrl = "@PROJECT_HOMEPAGE_URL@";
+
+} // namespace seseragi
+#endif // SESERAGI_APP_H

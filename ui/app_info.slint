@@ -1,0 +1,53 @@
+import { AboutSlint, VerticalBox, HorizontalBox, Palette } from "std-widgets.slint";
+
+export struct AppInfo {
+    name: string,
+    description: string,
+    version: string,
+    url: string,
+}
+
+export component AboutPopupContent inherits VerticalLayout {
+    in property <AppInfo> app_info;
+
+    Rectangle {
+        background: Palette.background;
+        border-color: Palette.border;
+        border-width: 1px;
+        border-radius: 8px;
+
+        VerticalLayout {
+            HorizontalBox { 
+                Image {
+                    source: @image-url("../asset/icon-512.png");
+                    width: 96px;
+                    height: 96px;
+                    padding-right: 16px;
+                }
+    
+                info_bar := VerticalLayout {
+                    HorizontalLayout {
+                        Text {
+                            text: app_info.name;
+                            font-size: 2rem;
+                            font-weight: 900;
+                        }
+                        Text { 
+                            text: " v\{app_info.version}";
+                            vertical-alignment: center;
+                            horizontal-stretch: 1;
+                        }
+                    }
+                    Text { text: app_info.description; wrap: word-wrap; }
+                    Text { text: app_info.url; }
+                }
+            }
+        }
+    }
+    
+    thanks_slint := Rectangle {
+        horizontal-stretch: 0;
+        background: Palette.background.with-alpha(0.95);
+        AboutSlint { preferred-height: 100px; }
+    }
+}
