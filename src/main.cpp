@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
           ui->invoke_reload_file();
         }
       } else {
-        handle_open_error(dialog_result.error().c_str());
+        handle_open_error(dialog_result.error());
       }
     });
 
@@ -105,8 +105,7 @@ int main(int argc, char *argv[]) {
           // clang-format off
           archive_items.push_back(AbcKvEntry{"coreType", SStr(archive->core_type_name)});
           for (size_t i = 0; const auto& ts : archive->time_samplings) {
-            auto k = SStr(std::format("timeSampling[{}]", i++));
-            archive_items.push_back(AbcKvEntry{k, SStr(ts)});
+            archive_items.push_back(AbcKvEntry{SStr(std::format("timeSampling[{}]", i++)), SStr(ts)});
           }
           archive_items.push_back(AbcKvEntry{"startTime", SStr(std::to_string(archive->start_time))});
           archive_items.push_back(AbcKvEntry{"endTime", SStr(std::to_string(archive->end_time))});
@@ -130,8 +129,7 @@ int main(int argc, char *argv[]) {
               dst_meta_item.value = v;
               dst_meta_items.push_back(dst_meta_item);
             }
-            dst_node.metadata =
-                (std::make_shared<AbcKvVecModel>(dst_meta_items));
+            dst_node.metadata = std::make_shared<AbcKvVecModel>(dst_meta_items);
 
             dst_nodes.push_back(dst_node);
           }
@@ -139,15 +137,14 @@ int main(int argc, char *argv[]) {
         ui->set_abc_list_view_nodes(
             std::make_shared<AbcNodeVecModel>(dst_nodes));
 
+        // JSON text
         auto json = nlohmann::ordered_json::object();
         archive->to_json(json);
-        auto jc = json.dump(4);
-        spdlog::info(jc);
-        ui->set_abc_json_view_text(jc.c_str());
+        ui->set_abc_json_view_text(json.dump(4).c_str());
 
         ui->set_has_error(false);
       } else {
-        handle_open_error(archive_result.error().c_str());
+        handle_open_error(archive_result.error());
       }
     });
   }
