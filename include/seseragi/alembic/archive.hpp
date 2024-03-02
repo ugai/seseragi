@@ -16,7 +16,10 @@
 
 namespace seseragi::alembic {
 
-struct Archive {
+class Archive {
+public:
+  using Ptr = std::shared_ptr<Archive>;
+
   std::string core_type_name;
   std::vector<std::string> time_samplings;
   double start_time;

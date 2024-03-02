@@ -1,18 +1,16 @@
 {
-	"dependencies": [
-		{
-			"name": "alembic",
-			"features": [
-				"hdf5"
-			]
-		},
-		{
-			"name": "cxxopts",
-			"version>=": "3.0.0"
-		},
-		"gtest",
-		"imath",
-		"nlohmann-json",
-		"spdlog"
-	]
+  "dependencies": [
+    {
+      "name": "alembic",
+      "features": ["hdf5"]
+    },
+    {
+      "name": "cxxopts",
+      "version>=": "3.0.0"
+    },
+    "gtest",
+    "imath",
+    "nlohmann-json",
+    "spdlog"
+  ]
 }

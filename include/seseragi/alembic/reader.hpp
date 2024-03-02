@@ -20,7 +20,7 @@ namespace seseragi::alembic {
 
 class Reader {
 public:
-  static inline std::expected<std::shared_ptr<Archive>, std::string>
+  static inline std::expected<Archive::Ptr, std::string>
   read_alembic_file(const std::string abc_file_path) {
     std::cout << abc_file_path << std::endl;
     if (!fs::exists(abc_file_path)) {
@@ -76,7 +76,7 @@ private:
   static constexpr unsigned int MaxRecursionDepth = 9999;
 
   static inline void scan_alembic_tree_recursively(
-      std::vector<std::shared_ptr<Node>> &node_list, std::shared_ptr<Node> node,
+      std::vector<Node::Ptr> &node_list, Node::Ptr node,
       const Alembic::Abc::IObject &obj, const unsigned int depth = 0) {
     if (depth > MaxRecursionDepth)
       return;

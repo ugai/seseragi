@@ -1,8 +1,7 @@
 import { Button, ComboBox, VerticalBox, HorizontalBox, Palette, ScrollView, GridBox, LineEdit, TextEdit } from "std-widgets.slint";
 
 import { AbcListView, AbcKvEntry, AbcNode } from "abc_list_view.slint";
-import { AbcJsonView } from "abc_json_view.slint";
-import { AboutPopupContent, AppInfo } from "app_info.slint";
+import { AboutPopupContent, AppInfo } from "about_popup.slint";
 
 export component AppWindow inherits Window {
     title: app_info.name;
@@ -10,20 +9,19 @@ export component AppWindow inherits Window {
     preferred-width: 600px;
     preferred-height: 800px;
 
-    in-out property <string> file_path: "";
-    
     in property <AppInfo> app_info;
+
+    in property <string> file_path: "";
+    property <bool> is_file_specified: file_path != "";
+
+    in property <string> error_message;
+    property <bool> has_error: error_message != "";
+
     in property <[AbcKvEntry]> abc_list_view_archive_items;
     in property <[AbcNode]> abc_list_view_nodes; 
-    in property <string> abc_json_view_text;
-    in property <bool> has_error: false;
-    in property <string> error_message;
-
-    property <bool> is_file_specified: file_path != "";
-    property <[string]> view_mode_names: ["List", "JSON"];
-    property <string> view_mode_name: "List";
 
     callback open_button_clicked <=> open_button.clicked;
+    callback reload_button_clicked <=> reload_button.clicked;
     callback reload_file;
 
     about_popup := PopupWindow {
@@ -31,9 +29,7 @@ export component AppWindow inherits Window {
         padding-right: 1rem;
         x: 1rem;
         y: 1rem;
-        AboutPopupContent {
-            app_info: app_info;
-        }
+        AboutPopupContent { app_info: app_info; }
     }
     
     VerticalLayout {
@@ -76,19 +72,6 @@ export component AppWindow inherits Window {
                         colspan: 2;
                     }
                 }
-
-                Row {
-                    Text {
-                        text: "View";
-                        vertical-alignment: center;
-                    }
-                    ComboBox {
-                        model: view_mode_names;
-                        current-value: view_mode_name;
-                        selected(s) => { view_mode_name = s }
-                        max-width: 200px;
-                    }
-                }
             }
         }
 
@@ -120,14 +103,10 @@ export component AppWindow inherits Window {
                             }
                         }
                         
-                        if !has_error && is_file_specified && view_mode_name == "List" : AbcListView {
+                        if !has_error && is_file_specified : AbcListView {
                             indent_width: 16px;
                             archive_items: abc_list_view_archive_items;
                             nodes: abc_list_view_nodes;
-                        }
-
-                        if !has_error && is_file_specified && view_mode_name == "JSON" : AbcJsonView {
-                            text: abc_json_view_text;
                         }
                     }
                 }

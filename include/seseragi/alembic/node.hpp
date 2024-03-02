@@ -15,7 +15,10 @@
 
 namespace seseragi::alembic {
 
-struct Node : public std::enable_shared_from_this<Node> {
+class Node : public std::enable_shared_from_this<Node> {
+public:
+  using Ptr = std::shared_ptr<Node>;
+
   unsigned int depth;
   std::string name;
   std::string full_name;
