@@ -9,6 +9,7 @@
 #include <Alembic/Abc/All.h>
 #include <Alembic/AbcCoreOgawa/All.h>
 #include <Alembic/AbcGeom/All.h>
+#include <clip.h>
 #include <cxxopts.hpp>
 #include <nfd.hpp>
 #include <spdlog/spdlog.h>
@@ -152,7 +153,16 @@ int main(int argc, char *argv[]) {
     ui->on_reload_button_clicked(
         [&] { dispatch_read_abc_file(ui->get_file_path().data()); });
 
-  }
+    ui->on_copy_json_button_clicked([&] {
+      if (!archive_ptr)
+        return;
+
+      // Create JSON text
+      auto json = nlohmann::ordered_json::object();
+      archive_ptr->to_json(json);
+      const auto s = json.dump(2);
+      clip::set_text(s);
+    });
 
     if (args.count("file") > 0) {
       const auto &abc_path = args["file"].as<std::string>();

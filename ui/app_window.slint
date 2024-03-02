@@ -22,6 +22,7 @@ export component AppWindow inherits Window {
 
     callback open_button_clicked <=> open_button.clicked;
     callback reload_button_clicked <=> reload_button.clicked;
+    callback copy_json_button_clicked <=> copy_json_button.clicked;
     callback reload_file;
 
     about_popup := PopupWindow {
@@ -48,8 +49,10 @@ export component AppWindow inherits Window {
                 reload_button := Button {
                     text: "🔄️ Reload";
                     enabled: is_file_specified;
-                    horizontal-stretch: 1;
-                    clicked => { reload_file() }
+                }
+                copy_json_button := Button {
+                    text: "📋 Copy JSON";
+                    enabled: is_file_specified;
                 }
                 about_button := Button {
                     text: "❔";

@@ -32,6 +32,9 @@ find_package(nlohmann_json CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 # External git submodules
+set(CLIP_EXAMPLES off)
+add_subdirectory(external/clip)
+include_directories(external/clip)
 add_subdirectory(external/nativefiledialog-extended)
 
 # Slint
@@ -82,8 +85,9 @@ target_link_libraries(seseragi PRIVATE Imath::Imath Imath::ImathConfig)
 target_link_libraries(seseragi PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(seseragi PRIVATE spdlog::spdlog)
 
-# Native File Dialog Extended
-target_link_libraries(seseragi PRIVATE nfd)
+# External git submodules
+target_link_libraries(seseragi PRIVATE clip)
+target_link_libraries(seseragi PRIVATE nfd) # Native File Dialog Extended
 
 # Slint
 file(GLOB_RECURSE SLINT_SOURCES ui/*.slint)

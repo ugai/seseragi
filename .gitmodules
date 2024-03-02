@@ -1,3 +1,6 @@
+[submodule "external/clip"]
+	path = external/clip
+	url = https://github.com/dacap/clip
 [submodule "external/nativefiledialog-extended"]
 	path = external/nativefiledialog-extended
 	url = https://github.com/btzy/nativefiledialog-extended
