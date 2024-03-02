@@ -6,13 +6,24 @@ A simple GUI tool for checking the hierarchy information of Alembic files.
 
 ## Build from source
 
+### Prerequisites
+
 - Git
 - CMake
 - Vcpkg
-  - Add the directory containing `vcpkg.exe` to your `PATH` and `VCPKG_ROOT` environment variables.
+  - Add the directory containing `vcpkg` executable to your `PATH` and `VCPKG_ROOT` environment variables.
 - Rust
 
+### Build
+
 ```bash
+# Ubuntu 22.04 {{{
+sudo apt install build-essentials cargo cmake curl git libgtk-3-dev pkg-config rustc tar unzip zip
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt update && sudo apt install g++-13
+export CXX=/usr/bin/g++-13
+# }}}
+
 git clone --recursive https://github.com/ugai/seseragi
 cd seseragi
 vcpkg install
