@@ -1,6 +1,6 @@
 # Third Party Notices
 
-This software depends on the following open source software packages.
+Seseragi depends on the following open source software packages.
 
 - [Third Party Notices](#third-party-notices)
   - [Alembic](#alembic)
