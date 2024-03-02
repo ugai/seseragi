@@ -42,12 +42,8 @@ export component AboutPopupContent inherits VerticalLayout {
                     Text { text: app_info.url; }
                 }
             }
-        }
-    }
     
-    thanks_slint := Rectangle {
-        horizontal-stretch: 0;
-        background: Palette.background.with-alpha(0.95);
-        AboutSlint { preferred-height: 100px; }
+            thanks_slint := AboutSlint { preferred-height: 100px; }
+        }
     }
 }
