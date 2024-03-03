@@ -1,14 +1,9 @@
-#include <expected>
 #include <filesystem>
 #include <format>
 #include <iostream>
-#include <optional>
 #include <string>
 #include <thread>
 
-#include <Alembic/Abc/All.h>
-#include <Alembic/AbcCoreOgawa/All.h>
-#include <Alembic/AbcGeom/All.h>
 #include <clip.h>
 #include <cxxopts.hpp>
 #include <nfd.hpp>
@@ -19,7 +14,6 @@
 #include <seseragi/alembic/reader.hpp>
 #include <seseragi/app.hpp>
 #include <seseragi/dialog.hpp>
-#include <seseragi/utils.hpp>
 #ifdef _WIN32
 #include <seseragi/win32.hpp>
 #endif

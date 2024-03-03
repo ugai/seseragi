@@ -1,8 +1,6 @@
 #ifndef SESERAGI_WIN32_H
 #define SESERAGI_WIN32_H
 
-#include <string>
-
 #ifdef _WIN32
 #include <Windows.h>
 

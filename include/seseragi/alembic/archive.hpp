@@ -1,17 +1,13 @@
 #ifndef SESERAGI_ALEMBIC_ARCHIVE_H
 #define SESERAGI_ALEMBIC_ARCHIVE_H
 
-#include <format>
-#include <map>
 #include <memory>
-#include <sstream>
 #include <string>
 #include <vector>
 
 #include <Alembic/AbcCoreFactory/IFactory.h>
 #include <nlohmann/json.hpp>
 
-#include "../utils.hpp"
 #include "node.hpp"
 
 namespace seseragi::alembic {
