@@ -101,6 +101,7 @@ int main(int argc, char *argv[]) {
           (*ui)->set_abc_list_view_archive_items(items);
           (*ui)->set_abc_list_view_nodes(nodes);
           (*ui)->set_error_message("");
+          (*ui)->set_is_loading(false);
         }
       });
     };
@@ -112,6 +113,7 @@ int main(int argc, char *argv[]) {
               (*ui)->set_abc_list_view_archive_items({});
               (*ui)->set_abc_list_view_nodes({});
               (*ui)->set_error_message(error_message.c_str());
+              (*ui)->set_is_loading(false);
             }
           });
         };
@@ -136,6 +138,7 @@ int main(int argc, char *argv[]) {
       if (dialog_result) {
         if (const auto &path = dialog_result.value(); !path.empty()) {
           ui->set_file_path(path.string().c_str());
+          ui->set_is_loading(true);
           dispatch_read_abc_file(path.string());
         }
       } else {
@@ -144,8 +147,10 @@ int main(int argc, char *argv[]) {
       }
     });
 
-    ui->on_reload_button_clicked(
-        [&] { dispatch_read_abc_file(ui->get_file_path().data()); });
+    ui->on_reload_button_clicked([&] {
+      ui->set_is_loading(true);
+      dispatch_read_abc_file(ui->get_file_path().data());
+    });
 
     ui->on_copy_json_button_clicked([&] {
       if (!archive_ptr)
