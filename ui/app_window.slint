@@ -64,7 +64,7 @@ export component AppWindow inherits Window {
                 }
                 copy_json_button := Button {
                     text: "📋 Copy JSON";
-                    enabled: has_file_path && !is_loading;
+                    enabled: has_file_path && !is_loading && !has_error_message;
                 }
                 about_button := Button {
                     text: "❔";
