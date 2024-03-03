@@ -1,6 +1,17 @@
-import { Button, ComboBox, VerticalBox, HorizontalBox, Palette, ScrollView, Spinner, GridBox, LineEdit, TextEdit } from "std-widgets.slint";
+import {
+    Button,
+    ComboBox,
+    GridBox,
+    HorizontalBox,
+    LineEdit,
+    Palette,
+    ScrollView,
+    Spinner,
+    TextEdit,
+    VerticalBox
+} from "std-widgets.slint";
 
-import { AbcListView, AbcKvEntry, AbcNode } from "abc_list_view.slint";
+import { AbcKvEntry, AbcListView, AbcNode } from "abc_list_view.slint";
 import { AboutPopupContent, AppInfo } from "about_popup.slint";
 
 export component AppWindow inherits Window {
@@ -106,8 +117,7 @@ export component AppWindow inherits Window {
     
                 ScrollView {
                     scroll_inner := VerticalBox {
-                        // Alert box
-                        if has_error_message: Rectangle {
+                        if has_error_message: alert_box := Rectangle {
                             padding: 1rem;
                             background: red.with-alpha(0.2);
                 
