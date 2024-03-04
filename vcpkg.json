@@ -8,7 +8,6 @@
       "name": "cxxopts",
       "version>=": "3.0.0"
     },
-    "gtest",
     "hdf5",
     "imath",
     "nlohmann-json",

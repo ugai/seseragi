@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
 set(CMAKE_CXX_STANDARD 23)
-enable_testing()
 
 project(seseragi
   VERSION 0.1.0
@@ -27,7 +26,6 @@ configure_file(
 include($ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 find_package(Alembic CONFIG REQUIRED)
 find_package(cxxopts CONFIG REQUIRED)
-find_package(GTest CONFIG REQUIRED)
 find_package(hdf5 CONFIG REQUIRED)
 find_package(Imath CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
@@ -74,15 +72,9 @@ if (MSVC)
 	set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 endif()
 
-# Seseragi Test
-file(GLOB_RECURSE CPP_TEST_SOURCES tests/*.cpp)
-add_executable(seseragi_test ${CPP_TEST_SOURCES})
-target_link_libraries(seseragi_test GTest::gtest_main)
-
 # Vcpkg ports
 target_link_libraries(seseragi PRIVATE Alembic::Alembic)
 target_link_libraries(seseragi PRIVATE cxxopts::cxxopts)
-target_link_libraries(seseragi PRIVATE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
 if (LINUX)
   target_link_libraries(seseragi PRIVATE hdf5::hdf5-static hdf5::hdf5_hl-static)
 endif()
@@ -129,7 +121,3 @@ foreach(OTHER_ASSET ${OTHER_ASSETS})
 endforeach()
 
 install(TARGETS seseragi RUNTIME)
-
-# Tests
-include(GoogleTest)
-gtest_discover_tests(seseragi_test)
