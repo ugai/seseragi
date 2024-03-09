@@ -8,7 +8,7 @@
 namespace seseragi {
 
 constexpr std::string_view AppName = "seseragi";
-constexpr std::string_view AppDescription = "A simple GUI tool for checking the hierarchy information of Alembic files.";
+constexpr std::string_view AppDescription = "Alembic hierarchy viewer GUI.";
 constexpr std::string_view AppVersion = "0.1.0";
 constexpr std::string_view AppUrl = "https://github.com/ugai/seseragi";
 
