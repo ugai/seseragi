@@ -1,5 +1,7 @@
 # Seseragi
 
+[![CMake on multiple platforms](https://github.com/ugai/seseragi/actions/workflows/cmake-multi-platform.yml/badge.svg?branch=main)](https://github.com/ugai/seseragi/actions/workflows/cmake-multi-platform.yml)
+
 ![icon](asset/icon-64.png)
 
 A simple GUI tool for checking the hierarchy information of Alembic files.
