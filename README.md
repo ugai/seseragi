@@ -6,6 +6,10 @@
 
 A simple GUI tool for checking the hierarchy information of Alembic files.
 
+## Screenshot
+
+[<img src="asset/ss.png" width="25%" height="25%" alt="screenshot">](asset/ss.png)
+
 ## Build from source
 
 ### Prerequisites
