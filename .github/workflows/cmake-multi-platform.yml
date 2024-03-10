@@ -59,10 +59,10 @@ jobs:
       shell: bash
       run: |
         sudo apt update
-        sudo apt install build-essentials cmake curl git libgtk-3-dev pkg-config tar unzip zip
+        sudo apt install -y libgtk-3-dev
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test
         sudo apt update
-        sudo apt install g++-13
+        sudo apt install -y g++-13
         export CXX=/usr/bin/g++-13
 
     - name: Setup Rust
