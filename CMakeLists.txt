@@ -25,6 +25,7 @@ find_package(spdlog CONFIG REQUIRED)
 
 # External git submodules
 set(CLIP_EXAMPLES off)
+set(CLIP_TESTS off)
 add_subdirectory(external/clip)
 add_subdirectory(external/nativefiledialog-extended)
 
