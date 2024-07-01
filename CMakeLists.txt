@@ -24,8 +24,8 @@ find_package(nlohmann_json CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 # External git submodules
-set(CLIP_EXAMPLES off)
-set(CLIP_TESTS off)
+set(CLIP_EXAMPLES OFF CACHE BOOL "Compile clip examples")
+set(CLIP_TESTS OFF CACHE BOOL "Compile clip tests")
 add_subdirectory(external/clip)
 add_subdirectory(external/nativefiledialog-extended)
 
